@@ -310,3 +310,5 @@ When you want to contribute code, please follow these steps:
 Feel free to open an issue for questions, suggestions, or discussions related to this repository. For further discussion as well as a showcase of some community projects, check out the [Polymer developer forum](https://forum.polymerlabs.org).
 
 Thank you for being a part of our community!
+
+SELECT t.TABLESPACE, t.totalspace AS " Totalspace(MB)", ROUND((t.totalspace - NVL(fs.freespace, 0)), 2) AS "Used Space(MB)", NVL(fs.freespace, 0) AS "Freespace(MB)", ROUND(((t.totalspace - NVL(fs.freespace, 0)) / t.totalspace) * 100, 2) AS "%Used", ROUND((NVL(fs.freespace, 0) / t.totalspace) * 100, 2) AS "% Free" FROM (SELECT ROUND(SUM(d.BYTES) / (1024 * 1024)) AS totalspace, d.tablespace_name TABLESPACE FROM dba_data_files d GROUP BY d.tablespace_name) t, (SELECT ROUND(SUM(f.BYTES) / (1024 * 1024)) AS freespace, f.tablespace_name TABLESPACE FROM dba_free_space f GROUP BY f.tablespace_name) fs WHERE t.TABLESPACE = fs.TABLESPACE(+) ORDER BY 5 desc;
